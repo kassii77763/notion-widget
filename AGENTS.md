@@ -31,4 +31,9 @@
 
 ## 3. 技術仕様
 - 外部フレームワークを使わない純粋な HTML5 / Vanilla CSS / JavaScript (ES6+)。
-- サウンド通知（Web Audio APIによる優しいビープ音）。
+- サウンド通知（Web Audio APIによる優しいビープ音および環境音）。
+
+## 4. 品質保証 & 自動テスト判定ルール (Quality Assurance)
+- コードを変更・機能追加した場合は、コミット前に必ず `node test_harness.js` を実行すること。
+- 全テスト項目が PASS することを確認してからコミットおよび Push を行うこと。
+- FAIL が発生した状態での GitHub への Push は固く禁止する。
