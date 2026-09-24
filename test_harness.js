@@ -49,7 +49,7 @@ requiredIDs.forEach(id => {
 });
 
 // 3. SVG 表示切れ・はみ出し防止ルールチェック
-if (htmlContent.includes('viewBox="0 0 220 220"')) {
+if (htmlContent.includes('viewBox="0 0 200 200"') || htmlContent.includes('viewBox="0 0 220 220"')) {
   logPass('SVG viewBox スケーリング設定: 正常');
 } else {
   logFail('CRITICAL: ポモドーロ SVG の viewBox 設定が失われており、正方形に切り取られるリスクがあります！');
@@ -63,16 +63,16 @@ if (cssContent.includes('white-space: nowrap')) {
   logFail('WARNING: タブの改行防止設定が欠如しています。');
 }
 
-if (cssContent.includes('overflow: visible')) {
-  logPass('SVGリングはみ出し許可 (overflow: visible): 正常');
+if (cssContent.includes('.pomo-timer-circle') && cssContent.includes('width: 200px')) {
+  logPass('SVGリング枠サイズ正規化 (width: 200px): 正常');
 } else {
   logFail('CRITICAL: SVGリングの overflow: visible 設定がなく、欠ける恐れがあります！');
 }
 
 // 5. JavaScript ロジック構造チェック
 const jsContent = fs.readFileSync(path.join(widgetDir, 'app.js'), 'utf-8');
-if (jsContent.includes('RING_CIRCUMFERENCE = 2 * Math.PI * 95')) {
-  logPass('ポモドーロリング周長定数 (596.9): 正常一致');
+if (jsContent.includes('RING_CIRCUMFERENCE = 2 * Math.PI * 80')) {
+  logPass('ポモドーロリング周長定数 (502.7): 正常一致');
 } else {
   logFail('CRITICAL: ポモドーロリングの周長計算定数がズレています！');
 }

@@ -549,33 +549,33 @@ body {
 
 .pomo-timer-circle {
   position: relative;
-  width: 180px;
-  height: 180px;
+  width: 200px;
+  height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: visible;
+  overflow: visible !important;
 }
 
 .progress-ring {
   transform: rotate(-90deg);
-  width: 100%;
-  height: 100%;
-  overflow: visible;
+  width: 200px;
+  height: 200px;
+  overflow: visible !important;
 }
 
 .progress-ring-bg {
   stroke: rgba(255, 255, 255, 0.08);
-  stroke-width: 10;
+  stroke-width: 8;
   fill: transparent;
 }
 
 .progress-ring-fill {
   stroke: var(--accent-purple);
-  stroke-width: 10;
+  stroke-width: 8;
   stroke-linecap: round;
   fill: transparent;
-  stroke-dasharray: 596.9; /* 2 * PI * 95 */
+  stroke-dasharray: 502.7; /* 2 * PI * 80 */
   stroke-dashoffset: 0;
   transition: stroke-dashoffset 0.3s ease;
   filter: drop-shadow(0 0 8px var(--accent-purple-glow));
