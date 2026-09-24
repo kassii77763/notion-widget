@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notion Aesthetics Multi-Widget</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="widget-container">
+    <!-- Header / Navigation Tabs -->
+    <header class="widget-header">
+      <nav class="nav-tabs">
+        <button class="tab-btn active" data-tab="clock" id="tab-clock">
+          <i data-lucide="clock"></i>
+          <span>時計</span>
+        </button>
+        <button class="tab-btn" data-tab="pomodoro" id="tab-pomodoro">
+          <i data-lucide="timer"></i>
+          <span>ポモドーロ</span>
+        </button>
+        <button class="tab-btn" data-tab="countdown" id="tab-countdown">
+          <i data-lucide="calendar-heart"></i>
+          <span>カウントダウン</span>
+        </button>
+      </nav>
+      <button class="sound-toggle-btn" id="sound-toggle" title="効果音のON/OFF">
+        <i data-lucide="volume-2" id="sound-icon"></i>
+      </button>
+    </header>
+
+    <!-- Main Content Panels -->
+    <main class="widget-main">
+      <!-- 1. CLOCK PANEL -->
+      <section class="panel active" id="panel-clock">
+        <div class="clock-display">
+          <div class="date-badge" id="clock-date">2026年9月24日 (木)</div>
+          
+          <!-- Digital Clock View -->
+          <div class="digital-clock" id="digital-clock">
+            <span class="time-main" id="clock-time">00:00</span>
+            <span class="time-seconds" id="clock-seconds">00</span>
+            <span class="time-ampm" id="clock-ampm"></span>
+          </div>
+
+          <!-- Analog Clock View (Hidden by default, toggleable) -->
+          <div class="analog-clock hidden" id="analog-clock">
+            <div class="clock-face">
+              <div class="hand hour-hand" id="analog-hour"></div>
+              <div class="hand minute-hand" id="analog-minute"></div>
+              <div class="hand second-hand" id="analog-second"></div>
+              <div class="center-dot"></div>
+              <span class="marker m-12">12</span>
+              <span class="marker m-3">3</span>
+              <span class="marker m-6">6</span>
+              <span class="marker m-9">9</span>
+            </div>
+          </div>
+
+          <!-- Clock Controls -->
+          <div class="panel-controls">
+            <button class="pill-btn" id="toggle-clock-style">
+              <i data-lucide="rotate-cw"></i>
+              <span id="clock-style-text">アナログ切り替え</span>
+            </button>
+            <button class="pill-btn" id="toggle-hour-format">
+              <span id="hour-format-text">24時間表示</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. POMODORO PANEL -->
+      <section class="panel" id="panel-pomodoro">
+        <div class="pomodoro-display">
+          <div class="pomo-mode-badge" id="pomo-mode-label">WORK TIME</div>
+          
+          <div class="pomo-timer-circle">
+            <svg class="progress-ring" width="220" height="220">
+              <circle class="progress-ring-bg" cx="110" cy="110" r="95"></circle>
+              <circle class="progress-ring-fill" id="pomo-progress" cx="110" cy="110" r="95"></circle>
+            </svg>
+            <div class="pomo-time-text" id="pomo-time">25:00</div>
+          </div>
+
+          <div class="pomo-controls">
+            <button class="control-btn primary" id="pomo-start-btn">
+              <i data-lucide="play" id="pomo-play-icon"></i>
+              <span id="pomo-start-text">スタート</span>
+            </button>
+            <button class="control-btn secondary" id="pomo-reset-btn">
+              <i data-lucide="rotate-ccw"></i>
+            </button>
+            <button class="control-btn secondary" id="pomo-skip-btn" title="モード切り替え">
+              <i data-lucide="skip-forward"></i>
+            </button>
+          </div>
+
+          <div class="pomo-stats">
+            <span>完了セッション: <strong id="pomo-count">0</strong></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. COUNTDOWN PANEL -->
+      <section class="panel" id="panel-countdown">
+        <div class="countdown-display">
+          <div class="event-title-container">
+            <h2 class="event-title" id="event-title-display">目標イベント日</h2>
+            <button class="icon-btn-subtle" id="edit-event-btn" title="イベントを編集">
+              <i data-lucide="edit-3"></i>
+            </button>
+          </div>
+
+          <!-- Countdown Grid Cards -->
+          <div class="countdown-grid">
+            <div class="time-card">
+              <span class="card-num" id="cd-days">00</span>
+              <span class="card-label">DAYS</span>
+            </div>
+            <div class="time-card">
+              <span class="card-num" id="cd-hours">00</span>
+              <span class="card-label">HOURS</span>
+            </div>
+            <div class="time-card">
+              <span class="card-num" id="cd-minutes">00</span>
+              <span class="card-label">MINS</span>
+            </div>
+            <div class="time-card">
+              <span class="card-num" id="cd-seconds">00</span>
+              <span class="card-label">SECS</span>
+            </div>
+          </div>
+
+          <!-- Target Date Editor Modal / Inline form -->
+          <div class="event-edit-form hidden" id="event-edit-form">
+            <div class="form-group">
+              <label for="event-title-input">目標のタイトル</label>
+              <input type="text" id="event-title-input" placeholder="例: 資格試験、誕生日、リリース日">
+            </div>
+            <div class="form-group">
+              <label for="event-date-input">目標日時</label>
+              <input type="datetime-local" id="event-date-input">
+            </div>
+            <div class="form-actions">
+              <button class="pill-btn primary" id="save-event-btn">保存する</button>
+              <button class="pill-btn secondary" id="cancel-event-btn">キャンセル</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer Status -->
+    <footer class="widget-footer">
+      <span class="brand-text">ANTIGRAVITY WIDGET</span>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    // Lucide アイコンの初期化
+    lucide.createIcons();
+  </script>
+</body>
+</html>
