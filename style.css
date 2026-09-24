@@ -2,23 +2,75 @@
    AGENTS.md 規定デザインシステム: ガラスモフィズム & ネオンアクセント
    ========================================================================== */
 
-:root {
-  /* Color Tokens - Botanical & Organic Natural */
+/* ==========================================================================
+   AGENTS.md 規定デザインシステム: 多テーマ & 木漏れ日アンビエント
+   ========================================================================== */
+
+/* 1. BOTANICAL THEME (Default) */
+[data-theme="botanical"] {
   --bg-gradient: linear-gradient(135deg, #192a27 0%, #0d1715 50%, #20332e 100%);
   --glass-bg: rgba(25, 42, 39, 0.75);
   --glass-border: rgba(163, 177, 138, 0.2);
   --glass-border-hover: rgba(163, 177, 138, 0.4);
-  
-  --accent-cyan: #a3b18a;          /* セージグリーン */
+  --accent-cyan: #a3b18a;
   --accent-cyan-glow: rgba(163, 177, 138, 0.3);
-  --accent-purple: #dda15e;        /* ウォームゴールド（木漏れ日カラー） */
+  --accent-purple: #dda15e;
   --accent-purple-glow: rgba(221, 161, 94, 0.3);
-  --accent-emerald: #588157;       /* フォレストグリーン */
-  
-  --text-main: #f4f1de;            /* 目に優しい生成り・オフホワイト */
-  --text-muted: #e9edc9;           /* 柔らかいセージベージュ */
-  --text-dim: #a3b18a;             /* 落ち着いたセージグリーン */
-  
+  --accent-emerald: #588157;
+  --text-main: #f4f1de;
+  --text-muted: #e9edc9;
+  --text-dim: #a3b18a;
+}
+
+/* 2. SAKURA THEME */
+[data-theme="sakura"] {
+  --bg-gradient: linear-gradient(135deg, #2d1820 0%, #170d12 50%, #381e28 100%);
+  --glass-bg: rgba(45, 24, 32, 0.75);
+  --glass-border: rgba(244, 162, 97, 0.25);
+  --glass-border-hover: rgba(244, 162, 97, 0.45);
+  --accent-cyan: #ffb703;
+  --accent-cyan-glow: rgba(255, 183, 3, 0.3);
+  --accent-purple: #f4a261;
+  --accent-purple-glow: rgba(244, 162, 97, 0.3);
+  --accent-emerald: #e76f51;
+  --text-main: #fff0f3;
+  --text-muted: #ffccd5;
+  --text-dim: #ffb3c1;
+}
+
+/* 3. WARM WOOD THEME */
+[data-theme="wood"] {
+  --bg-gradient: linear-gradient(135deg, #2b1e16 0%, #140d09 50%, #36261c 100%);
+  --glass-bg: rgba(43, 30, 22, 0.8);
+  --glass-border: rgba(212, 163, 115, 0.2);
+  --glass-border-hover: rgba(212, 163, 115, 0.4);
+  --accent-cyan: #d4a373;
+  --accent-cyan-glow: rgba(212, 163, 115, 0.3);
+  --accent-purple: #e9edc9;
+  --accent-purple-glow: rgba(233, 237, 201, 0.3);
+  --accent-emerald: #ccd5ae;
+  --text-main: #faedcd;
+  --text-muted: #fefae0;
+  --text-dim: #d4a373;
+}
+
+/* 4. MIDNIGHT THEME */
+[data-theme="midnight"] {
+  --bg-gradient: linear-gradient(135deg, #0f172a 0%, #020617 50%, #1e1b4b 100%);
+  --glass-bg: rgba(15, 23, 42, 0.75);
+  --glass-border: rgba(6, 182, 212, 0.2);
+  --glass-border-hover: rgba(6, 182, 212, 0.4);
+  --accent-cyan: #06b6d4;
+  --accent-cyan-glow: rgba(6, 182, 212, 0.4);
+  --accent-purple: #a855f7;
+  --accent-purple-glow: rgba(168, 85, 247, 0.4);
+  --accent-emerald: #10b981;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+}
+
+:root {
   /* Fonts */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-heading: 'Outfit', var(--font-sans);
@@ -27,6 +79,124 @@
   /* Transitions */
   --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-normal: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Ambient Sunlight Rays Animation */
+.sunlight-rays {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.ray {
+  position: absolute;
+  top: -20%;
+  left: 20%;
+  width: 300px;
+  height: 140%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 80%);
+  transform: rotate(-35deg);
+  filter: blur(30px);
+  animation: raySway 12s ease-in-out infinite alternate;
+}
+
+.ray-2 {
+  left: 60%;
+  animation-delay: -6s;
+  width: 400px;
+}
+
+@keyframes raySway {
+  0% { transform: rotate(-35deg) translateY(0) scaleX(1); opacity: 0.3; }
+  50% { opacity: 0.7; }
+  100% { transform: rotate(-30deg) translateY(20px) scaleX(1.2); opacity: 0.4; }
+}
+
+/* Header Action Controls */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.icon-btn-header {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.icon-btn-header:hover {
+  color: var(--text-main);
+  border-color: var(--glass-border-hover);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* BGM Menu Dropdown */
+.bgm-dropdown-container {
+  position: relative;
+}
+
+.bgm-menu {
+  position: absolute;
+  top: 44px;
+  right: 0;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 100;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  width: 120px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.bgm-opt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: all var(--transition-fast);
+}
+
+.bgm-opt i {
+  width: 14px;
+  height: 14px;
+}
+
+.bgm-opt:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+}
+
+.bgm-opt.active {
+  background: var(--accent-cyan);
+  color: #000;
+  font-weight: 600;
 }
 
 /* Reset & Base Styles */

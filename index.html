@@ -13,7 +13,13 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="widget-container">
+  <!-- Ambient Sunlight Ray Effect -->
+  <div class="sunlight-rays" aria-hidden="true">
+    <div class="ray ray-1"></div>
+    <div class="ray ray-2"></div>
+  </div>
+
+  <div class="widget-container" id="widget-root" data-theme="botanical">
     <!-- Header / Navigation Tabs -->
     <header class="widget-header">
       <nav class="nav-tabs">
@@ -30,9 +36,31 @@
           <span>カウントダウン</span>
         </button>
       </nav>
-      <button class="sound-toggle-btn" id="sound-toggle" title="効果音のON/OFF">
-        <i data-lucide="volume-2" id="sound-icon"></i>
-      </button>
+
+      <div class="header-actions">
+        <!-- BGM Selector Button -->
+        <div class="bgm-dropdown-container">
+          <button class="icon-btn-header" id="bgm-toggle-btn" title="環境音 (雨・焚き火・波)">
+            <i data-lucide="cloud-rain" id="bgm-icon"></i>
+          </button>
+          <div class="bgm-menu hidden" id="bgm-menu">
+            <button class="bgm-opt active" data-bgm="none"><i data-lucide="volume-x"></i> オフ</button>
+            <button class="bgm-opt" data-bgm="rain"><i data-lucide="cloud-rain"></i> 雨の音</button>
+            <button class="bgm-opt" data-bgm="fire"><i data-lucide="flame"></i> 焚き火</button>
+            <button class="bgm-opt" data-bgm="waves"><i data-lucide="waves"></i> 波の音</button>
+          </div>
+        </div>
+
+        <!-- Theme Switcher Button -->
+        <button class="icon-btn-header" id="theme-toggle-btn" title="テーマ切り替え (ボタニカル / 桜 / ウッド / ミッドナイト)">
+          <i data-lucide="palette"></i>
+        </button>
+
+        <!-- Sound Toggle -->
+        <button class="sound-toggle-btn" id="sound-toggle" title="効果音のON/OFF">
+          <i data-lucide="volume-2" id="sound-icon"></i>
+        </button>
+      </div>
     </header>
 
     <!-- Main Content Panels -->

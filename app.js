@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const state = {
     activeTab: localStorage.getItem('nw_activeTab') || 'clock',
     soundEnabled: localStorage.getItem('nw_sound') !== 'false',
+    theme: localStorage.getItem('nw_theme') || 'botanical',
+    bgmMode: 'none',
     // Clock State
     is24Hour: localStorage.getItem('nw_24h') === 'true',
     isAnalog: localStorage.getItem('nw_analog') === 'true',
@@ -24,6 +26,140 @@ document.addEventListener('DOMContentLoaded', () => {
     eventTitle: localStorage.getItem('nw_eventTitle') || '目標イベント',
     eventDate: localStorage.getItem('nw_eventDate') || getTomorrowISOString()
   };
+
+  const widgetRoot = document.getElementById('widget-root');
+  function applyTheme(themeName) {
+    state.theme = themeName;
+    widgetRoot.setAttribute('data-theme', themeName);
+    localStorage.setItem('nw_theme', themeName);
+  }
+  applyTheme(state.theme);
+
+  // Theme Toggle Button
+  const themeToggleBtn = document.getElementById('theme-toggle-btn');
+  const themes = ['botanical', 'sakura', 'wood', 'midnight'];
+  themeToggleBtn.addEventListener('click', () => {
+    const nextIdx = (themes.indexOf(state.theme) + 1) % themes.length;
+    applyTheme(themes[nextIdx]);
+  });
+
+  // ==========================================
+  // BGM SYNTHESIZER (Web Audio API)
+  // ==========================================
+  let bgmCtx = null;
+  let bgmNode = null;
+  let bgmGain = null;
+  let bgmInterval = null;
+
+  function stopBGM() {
+    if (bgmInterval) clearInterval(bgmInterval);
+    if (bgmNode) { try { bgmNode.stop(); } catch(e){} bgmNode = null; }
+    if (bgmCtx) { try { bgmCtx.close(); } catch(e){} bgmCtx = null; }
+  }
+
+  function startBGM(type) {
+    stopBGM();
+    if (type === 'none') return;
+
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      bgmCtx = new AudioCtx();
+      
+      // Create Noise Buffer (10s)
+      const bufferSize = bgmCtx.sampleRate * 5;
+      const noiseBuffer = bgmCtx.createBuffer(1, bufferSize, bgmCtx.sampleRate);
+      const output = noiseBuffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        output[i] = Math.random() * 2 - 1;
+      }
+
+      bgmNode = bgmCtx.createBufferSource();
+      bgmNode.buffer = noiseBuffer;
+      bgmNode.loop = true;
+
+      const filter = bgmCtx.createBiquadFilter();
+      bgmGain = bgmCtx.createGain();
+
+      if (type === 'rain') {
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(1000, bgmCtx.currentTime);
+        bgmGain.gain.setValueAtTime(0.08, bgmCtx.currentTime);
+      } else if (type === 'fire') {
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(800, bgmCtx.currentTime);
+        filter.Q.setValueAtTime(2, bgmCtx.currentTime);
+        bgmGain.gain.setValueAtTime(0.12, bgmCtx.currentTime);
+
+        // Crackle effect
+        bgmInterval = setInterval(() => {
+          if (!bgmCtx) return;
+          if (Math.random() < 0.3) {
+            const crackle = bgmCtx.createOscillator();
+            const cg = bgmCtx.createGain();
+            crackle.type = 'triangle';
+            crackle.frequency.setValueAtTime(200 + Math.random() * 400, bgmCtx.currentTime);
+            cg.gain.setValueAtTime(0.04, bgmCtx.currentTime);
+            cg.gain.exponentialRampToValueAtTime(0.001, bgmCtx.currentTime + 0.05);
+            crackle.connect(cg);
+            cg.connect(bgmCtx.destination);
+            crackle.start();
+            crackle.stop(bgmCtx.currentTime + 0.05);
+          }
+        }, 150);
+      } else if (type === 'waves') {
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(400, bgmCtx.currentTime);
+        bgmGain.gain.setValueAtTime(0.05, bgmCtx.currentTime);
+
+        // LFO for wave swelling
+        let wavePhase = 0;
+        bgmInterval = setInterval(() => {
+          if (!bgmCtx || !filter) return;
+          wavePhase += 0.05;
+          const freq = 300 + Math.sin(wavePhase) * 250;
+          filter.frequency.setValueAtTime(freq, bgmCtx.currentTime);
+        }, 100);
+      }
+
+      bgmNode.connect(filter);
+      filter.connect(bgmGain);
+      bgmGain.connect(bgmCtx.destination);
+      bgmNode.start();
+    } catch(e) {
+      console.warn('BGM error:', e);
+    }
+  }
+
+  // BGM Controls UI
+  const bgmToggleBtn = document.getElementById('bgm-toggle-btn');
+  const bgmMenu = document.getElementById('bgm-menu');
+  const bgmOpts = document.querySelectorAll('.bgm-opt');
+  const bgmIcon = document.getElementById('bgm-icon');
+
+  bgmToggleBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    bgmMenu.classList.toggle('hidden');
+  });
+
+  document.addEventListener('click', () => {
+    bgmMenu.classList.add('hidden');
+  });
+
+  bgmOpts.forEach(opt => {
+    opt.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const mode = opt.dataset.bgm;
+      state.bgmMode = mode;
+
+      bgmOpts.forEach(o => o.classList.toggle('active', o.dataset.bgm === mode));
+      startBGM(mode);
+      bgmMenu.classList.add('hidden');
+
+      const iconMap = { none: 'volume-x', rain: 'cloud-rain', fire: 'flame', waves: 'waves' };
+      bgmIcon.setAttribute('data-lucide', iconMap[mode] || 'cloud-rain');
+      if (window.lucide) lucide.createIcons();
+    });
+  });
 
   function getTomorrowISOString() {
     const tomorrow = new Date();
