@@ -332,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const pomoSkipBtn = document.getElementById('pomo-skip-btn');
   const pomoCountEl = document.getElementById('pomo-count');
 
-  const RING_CIRCUMFERENCE = 2 * Math.PI * 75; // 471.2
+  const RING_CIRCUMFERENCE = 2 * Math.PI * 95; // 596.9
 
   function updatePomoUI() {
     const mins = Math.floor(state.pomoTimeLeft / 60);
